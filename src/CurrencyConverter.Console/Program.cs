@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+﻿using System.Net.Http.Json;
 
 string baseCurrency = args[0];
 string targetCurrency = args[1];
@@ -16,26 +16,29 @@ if (!decimal.TryParse(args[2], out decimal amount))
 	return;
 }
 
-// Checking whether a date is provided and set the endpoint accordingly
-string endpoint = date != null ? $"{date}?access_key={apiKey}&symbols={baseCurrency},{targetCurrency}" : $"latest?access_key={apiKey}&symbols={baseCurrency},{targetCurrency}";
+string endpoint = BuildEndpoint(baseCurrency, targetCurrency, date, apiKey);
 
-HttpResponseMessage response = await httpClient.GetAsync(endpoint);
-response.EnsureSuccessStatusCode();
-
-string responseContent = await response.Content.ReadAsStringAsync();
-
-FixerResponse? fixerResponse = JsonSerializer.Deserialize<FixerResponse>(responseContent, new JsonSerializerOptions
-{
-	PropertyNameCaseInsensitive = true
-});
+FixerResponse? fixerResponse = await httpClient.GetFromJsonAsync<FixerResponse>(endpoint);
 
 if (fixerResponse != null && fixerResponse.Success)
 {
+	ConvertCurrency(fixerResponse, baseCurrency, targetCurrency, amount);
+}
+else
+{
+	Console.WriteLine("Failed to retrieve exchange rate data.");
+}
+
+string BuildEndpoint(string baseCurrency, string targetCurrency, string? date, string apiKey)
+{
+	return date != null ? $"{date}?access_key={apiKey}&symbols={baseCurrency},{targetCurrency}" : $"latest?access_key={apiKey}&symbols={baseCurrency},{targetCurrency}";
+}
+
+void ConvertCurrency(FixerResponse fixerResponse, string baseCurrency, string targetCurrency, decimal amount)
+{
 	if (fixerResponse.Rates.TryGetValue(baseCurrency, out decimal baseRate) && fixerResponse.Rates.TryGetValue(targetCurrency, out decimal targetRate))
 	{
-		// Convert baseCurrency to EUR
 		decimal amountInEur = amount / baseRate;
-		// Convert EUR to targetCurrency
 		decimal convertedAmount = amountInEur * targetRate;
 		Console.WriteLine($"{amount} {baseCurrency} is equal to {convertedAmount} {targetCurrency} on {fixerResponse.Date}");
 	}
@@ -43,10 +46,6 @@ if (fixerResponse != null && fixerResponse.Success)
 	{
 		Console.WriteLine($"Conversion rates for {baseCurrency} or {targetCurrency} not found.");
 	}
-}
-else
-{
-	Console.WriteLine("Failed to retrieve exchange rate data.");
 }
 
 public class FixerResponse
