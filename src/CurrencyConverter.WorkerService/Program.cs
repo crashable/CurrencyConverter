@@ -11,7 +11,7 @@ builder.Configuration.AddEnvironmentVariables();
 
 builder.Services.AddDbContext<ExchangeRateContext>(options =>
 {
-	options.UseSqlServer("Server=localhost\\MSSQLSERVER01;Database=master;Trusted_Connection=True;TrustServerCertificate=True;");
+	options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 builder.Services.AddHostedService<Worker>();
