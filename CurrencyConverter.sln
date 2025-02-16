@@ -7,28 +7,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{F0223013-7C3
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyConverter.Console", "src\CurrencyConverter.Console\CurrencyConverter.Console.csproj", "{09325F67-9FC2-48A4-BA46-106CCB175FCF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyConverter.FixerApi", "src\CurrencyConverter.FixerApi\CurrencyConverter.FixerApi.csproj", "{D0CAEA88-DD1B-4C08-8295-7DED6A2C8D3C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyConverter.WorkerService", "src\CurrencyConverter.WorkerService\CurrencyConverter.WorkerService.csproj", "{AB10828C-09E6-4A15-8BD3-690B6F246DA8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{09325F67-9FC2-48A4-BA46-106CCB175FCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{09325F67-9FC2-48A4-BA46-106CCB175FCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09325F67-9FC2-48A4-BA46-106CCB175FCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09325F67-9FC2-48A4-BA46-106CCB175FCF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D0CAEA88-DD1B-4C08-8295-7DED6A2C8D3C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D0CAEA88-DD1B-4C08-8295-7DED6A2C8D3C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D0CAEA88-DD1B-4C08-8295-7DED6A2C8D3C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D0CAEA88-DD1B-4C08-8295-7DED6A2C8D3C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB10828C-09E6-4A15-8BD3-690B6F246DA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB10828C-09E6-4A15-8BD3-690B6F246DA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB10828C-09E6-4A15-8BD3-690B6F246DA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB10828C-09E6-4A15-8BD3-690B6F246DA8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{09325F67-9FC2-48A4-BA46-106CCB175FCF} = {F0223013-7C30-45D3-B011-56A8AA5F2A8E}
-		{D0CAEA88-DD1B-4C08-8295-7DED6A2C8D3C} = {F0223013-7C30-45D3-B011-56A8AA5F2A8E}
+		{AB10828C-09E6-4A15-8BD3-690B6F246DA8} = {F0223013-7C30-45D3-B011-56A8AA5F2A8E}
 	EndGlobalSection
 EndGlobal

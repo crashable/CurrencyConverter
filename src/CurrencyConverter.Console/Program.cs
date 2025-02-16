@@ -4,6 +4,14 @@ string baseCurrency = args[0];
 string targetCurrency = args[1];
 string? date = args.Length > 3 ? args[3] : null;
 
+if (date != null && !DateTime.TryParse(date, out _))
+{
+	Console.WriteLine("Invalid date. Please provide a valid date in the format YYYY-MM-DD.");
+	return;
+}
+
+
+
 HttpClient httpClient = new HttpClient();
 string apiKey = Environment.GetEnvironmentVariable("FIXERIO_API_KEY") ?? throw new InvalidOperationException("API key not found in environment variables.");
 string _baseUrl = "https://data.fixer.io/api/";
