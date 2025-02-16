@@ -13,9 +13,8 @@ namespace CurrencyConverter.WorkerService
 		private readonly IHttpClientFactory _httpClientFactory;
 		private readonly IServiceScopeFactory _serviceScopeFactory;
 		private readonly IConfiguration _configuration;
-		private bool hasRunOnce = false;
 
-		public Worker(ILogger<Worker> logger,IConfiguration configuration, IHttpClientFactory httpClientFactory, IServiceScopeFactory serviceScopeFactory)
+		public Worker(ILogger<Worker> logger, IConfiguration configuration, IHttpClientFactory httpClientFactory, IServiceScopeFactory serviceScopeFactory)
 		{
 			_logger = logger;
 			_httpClientFactory = httpClientFactory;
@@ -32,57 +31,61 @@ namespace CurrencyConverter.WorkerService
 					_logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 				}
 				await Task.Delay(1000, stoppingToken);
-				if (!hasRunOnce) {
-					try
+				try
+				{
+					string? apiKey = _configuration["FIXERIO_API_KEY"];
+					var httpClient = _httpClientFactory.CreateClient();
+					string symbolsEndpoint = $"https://data.fixer.io/api/symbols?access_key={apiKey}";
+
+
+					var symbolsResponse = await httpClient.GetFromJsonAsync<SymbolsResponse>(symbolsEndpoint);
+
+
+					string symbolKeys = string.Join(",", symbolsResponse.Symbols.Keys);
+					string latestRatesEndpoint = $"https://data.fixer.io/api/latest?access_key={apiKey}&symbols={symbolKeys}";
+					_logger.LogInformation("symbols: {symbolKeys}", symbolKeys);
+
+
+
+
+					var exchangeRatesResponse = await httpClient.GetFromJsonAsync<LatestRatesResponse>(latestRatesEndpoint);
+
+					if (exchangeRatesResponse != null && exchangeRatesResponse.Success)
 					{
-						string? apiKey = _configuration["FIXERIO_API_KEY"];
-						var httpClient = _httpClientFactory.CreateClient();
-						string symbolsEndpoint = $"https://data.fixer.io/api/symbols?access_key={apiKey}";
+						_logger.LogInformation("Exchange rates retrieved successfully.");
 
-
-						var symbolsResponse = await httpClient.GetFromJsonAsync<SymbolsResponse>(symbolsEndpoint);
-
-
-						string symbolKeys = string.Join(",", symbolsResponse.Symbols.Keys);
-						string latestRatesEndpoint = $"https://data.fixer.io/api/latest?access_key={apiKey}&symbols={symbolKeys}";
-						_logger.LogInformation("symbols: {symbolKeys}", symbolKeys);
-
-
-
-
-						var exchangeRatesResponse = await httpClient.GetFromJsonAsync<LatestRatesResponse>(latestRatesEndpoint);
-
-						if (exchangeRatesResponse != null && exchangeRatesResponse.Success)
+						using (var scope = _serviceScopeFactory.CreateScope())
 						{
-							_logger.LogInformation("Exchange rates retrieved successfully.");
+							var dbContext = scope.ServiceProvider.GetRequiredService<ExchangeRateContext>();
 
-							using (var scope = _serviceScopeFactory.CreateScope())
+							var exchangeRateSnapshot = new ExchangeRateSnapshot
 							{
-								var dbContext = scope.ServiceProvider.GetRequiredService<ExchangeRateContext>();
-
-								var exchangeRateSnapshot = new ExchangeRateSnapshot
+								SnapshotDate = DateTime.Parse(exchangeRatesResponse.Date),
+								BaseCurrency = exchangeRatesResponse.Base,
+								Timestamp = exchangeRatesResponse.Timestamp,
+								Rates = exchangeRatesResponse.Rates.Select(rate => new ExchangeRate
 								{
-									SnapshotDate = DateTime.Parse(exchangeRatesResponse.Date),
-									BaseCurrency = exchangeRatesResponse.Base,
-									Timestamp = exchangeRatesResponse.Timestamp,
-									Rates = exchangeRatesResponse.Rates.Select(rate => new ExchangeRate
-									{
-										CurrencyCode = rate.Key,
-										Rate = rate.Value
-									}).ToList()
-								};
-								dbContext.Snapshots.Add(exchangeRateSnapshot);
-								await dbContext.SaveChangesAsync(stoppingToken);
-								_logger.LogInformation("Exchange rates saved to database.");
+									CurrencyCode = rate.Key,
+									Rate = rate.Value
+								}).ToList()
+							};
+							dbContext.Snapshots.Add(exchangeRateSnapshot);
+							await dbContext.SaveChangesAsync(stoppingToken);
+							_logger.LogInformation("Exchange rates saved to database.");
 
-							}
 						}
 					}
-					catch (Exception ex) { _logger.LogError(ex, "An error occurred."); }
-					hasRunOnce = true;
 
 				}
+				catch (Exception ex) { _logger.LogError(ex, "An error occurred."); }
+				var now = DateTime.UtcNow;
+				var nextRun = now.Date.AddDays(1); // Next day at midnight
+				var delay = nextRun - now;
 
+				_logger.LogInformation("Next run scheduled at: {nextRun}", nextRun);
+
+				// Delay until the next run time
+				await Task.Delay(delay, stoppingToken);
 			}
 		}
 	}
