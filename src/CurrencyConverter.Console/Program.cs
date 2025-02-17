@@ -61,7 +61,7 @@ public class FixerResponse
 	public bool Success { get; set; }
 	public bool Historical { get; set; }
 	public long Timestamp { get; set; }
-	public string Base { get; set; }
-	public string Date { get; set; }
-	public Dictionary<string, decimal> Rates { get; set; }
+	public required string Base { get; set; }
+	public required string Date { get; set; }
+	public required Dictionary<string, decimal> Rates { get; set; }
 }

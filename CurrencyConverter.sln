@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyConverter.WorkerSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CurrencyConverter.Api", "CurrencyConverter.Api\CurrencyConverter.Api.csproj", "{04FB693C-B8FE-4132-A242-574330968671}"
 EndProject
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "currencyconverter.webapp", "CurrencyConverter.WebApp\currencyconverter.webapp.esproj", "{F31C5F37-465A-43BC-958B-288901882CED}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,12 @@ Global
 		{04FB693C-B8FE-4132-A242-574330968671}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{04FB693C-B8FE-4132-A242-574330968671}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{04FB693C-B8FE-4132-A242-574330968671}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F31C5F37-465A-43BC-958B-288901882CED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F31C5F37-465A-43BC-958B-288901882CED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F31C5F37-465A-43BC-958B-288901882CED}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F31C5F37-465A-43BC-958B-288901882CED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F31C5F37-465A-43BC-958B-288901882CED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F31C5F37-465A-43BC-958B-288901882CED}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -37,5 +45,6 @@ Global
 		{09325F67-9FC2-48A4-BA46-106CCB175FCF} = {F0223013-7C30-45D3-B011-56A8AA5F2A8E}
 		{AB10828C-09E6-4A15-8BD3-690B6F246DA8} = {F0223013-7C30-45D3-B011-56A8AA5F2A8E}
 		{04FB693C-B8FE-4132-A242-574330968671} = {F0223013-7C30-45D3-B011-56A8AA5F2A8E}
+		{F31C5F37-465A-43BC-958B-288901882CED} = {F0223013-7C30-45D3-B011-56A8AA5F2A8E}
 	EndGlobalSection
 EndGlobal
